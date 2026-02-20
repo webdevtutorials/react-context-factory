@@ -8,7 +8,7 @@ A quick-start guide to scaffolding a new React-Vite project with React Context A
 
 ---
 
-## To run the app:
+### To run the app:
 
 ```bash
 cd react-context-multi
@@ -16,7 +16,7 @@ yarn install
 yarn dev
 ```
 
-## To build from scratch start a new Vite-React app:
+### To build from scratch start a new Vite-React app:
 
 ```bash
 cd tutorials
@@ -25,7 +25,7 @@ yarn create vite react-context-multi --template react
 cd react-context-multi
 ```
 
-## Initiate version control:
+### Initiate version control:
 
 ```bash
 git init
@@ -34,14 +34,14 @@ git commit -m "Empty app"
 git branch -m master main
 ```
 
-## Upload to GitHub:
+### Upload to GitHub:
 
 ```bash
 gh auth status
 gh repo create react-context-multi --public --source=. --remote=origin --push
 ```
 
-## Create multiple contexts, providers, and hooks. In the providers add data to share:
+### Create multiple contexts, providers, and hooks. In the providers add data to share:
 
 ```js
 // src / Context1
@@ -105,7 +105,7 @@ export function AppProviders({ children }) {
 }
 ```
 
-## Wrap consumers
+### Wrap the consumers
 
 ```js
 // src / main.jsx
@@ -124,7 +124,7 @@ createRoot(document.getElementById("root")).render(
 );
 ```
 
-## Create consumer and access the data
+### Create consumer and access the data
 
 ```js
 import { useEffect } from "react";
@@ -150,7 +150,7 @@ export default function Consumer() {
 }
 ```
 
-## Integrate the consumer in the app
+### Integrate the consumer in the app
 
 ```js
 // src / App.jsx
