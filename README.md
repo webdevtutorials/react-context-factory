@@ -39,6 +39,7 @@ git branch -m master main
 ```bash
 gh auth status
 gh repo create react-context-multi --public --source=. --remote=origin --push
+git remote -v
 ```
 
 ### Create multiple contexts, providers, and hooks. In the providers add data to share:
