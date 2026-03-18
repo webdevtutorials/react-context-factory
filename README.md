@@ -42,7 +42,7 @@ gh repo create react-context-factory --public --source=. --remote=origin --push
 git remote -v
 ```
 
-### Create contexts factory function and contexts:
+### Create the contexts factory function and contexts:
 
 ```js
 // src / DataContexts.jsx
@@ -56,7 +56,7 @@ const Data2Context = createSafeContext();
 const Data3Context = createSafeContext();
 ```
 
-### Create provider factory function and providers:
+### Create the provider factory function and providers:
 
 ```js
 // src / DataContexts.jsx
@@ -75,7 +75,7 @@ const Data2Provider = createDataProvider(Data2Context);
 const Data3Provider = createDataProvider(Data3Context);
 ```
 
-### Create provider composing function and compose providers:
+### Create the provider composing function and compose the providers:
 
 ```js
 // src / DataContexts.jsx
@@ -95,7 +95,7 @@ export const AppProviders = composeProviders([
 ]);
 ```
 
-### Create context hook factory function and the hooks:
+### Create the context hook factory function and the hooks:
 
 ```js
 // src / DataContexts.jsx
@@ -115,7 +115,7 @@ const useData2 = createContextHook(Data2Context, "Data2Provider", "useData2");
 const useData3 = createContextHook(Data3Context, "Data3Provider", "useData3");
 ```
 
-### Export all hooks together:
+### Export all the hooks together:
 
 ```js
 // src / DataContexts.jsx
