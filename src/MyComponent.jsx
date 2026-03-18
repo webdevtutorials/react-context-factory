@@ -1,3 +1,5 @@
+// src / MyComponent.jsx
+
 import { useEffect } from "react";
 import { useData } from "./DataContexts";
 

@@ -4,7 +4,7 @@
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=FFD62E)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
 
-A quick-start guide to scaffolding a new React-Vite project with React Context API and muliple providers.
+A quick-start guide to scaffolding a new React-Vite project with scalable and safe React Context API using factory functions, custom hooks, and provider composition.
 
 ---
 
@@ -42,74 +42,127 @@ gh repo create react-context-multi --public --source=. --remote=origin --push
 git remote -v
 ```
 
-### Create multiple contexts, providers, and hooks. In the providers add data to share:
+### Create contexts factory function and contexts:
 
 ```js
-// src / Context1
-import { useState, useMemo, createContext, useContext } from "react";
+// src / DataContexts.jsx
 
-const Context1 = createContext(undefined);
-
-function Provider1({ children }) {
-  const [data1, setData1] = useState("No data-1");
-  const value = useMemo(() => [data1, setData1], [data1, setData1]);
-
-  return <Context1.Provider value={value}>{children}</Context1.Provider>;
+function createSafeContext() {
+  return createContext(undefined);
 }
 
-function useContext1() {
-  const context = useContext(Context1);
-  if (context === undefined)
-    throw new Error("useContext1 must be used withing Provider1");
-
-  return context;
-}
-
-export { Context1, useContext1, Provider1 };
-
-// src / Context2
-import { useState, useMemo, createContext, useContext } from "react";
-
-const Context2 = createContext();
-
-function Provider2({ children }) {
-  const [data2, setData2] = useState("No data-2");
-  const value = useMemo(() => [data2, setData2], [data2, setData2]);
-
-  return <Context2.Provider value={value}>{children}</Context2.Provider>;
-}
-
-function useContext2() {
-  const context = useContext(Context2);
-  if (context === undefined)
-    throw new Error("useContext2 must be used within Provider2");
-
-  return context;
-}
-
-export { Context2, useContext2, Provider2 };
+const Data1Context = createSafeContext();
+const Data2Context = createSafeContext();
+const Data3Context = createSafeContext();
 ```
 
-## Consolidate multiple providers
+### Create provider factory function and providers
 
 ```js
-// src / AppProviders.jsx
-import { Provider1 } from "./Context1";
-import { Provider2 } from "./Context2";
+// src / DataContexts.jsx
 
-export function AppProviders({ children }) {
+function createDataProvider(Context) {
+  return ({ children }) => {
+    const [data, setData] = useState("No data.");
+    const value = useMemo(() => ({ data, setData }), [data, setData]);
+
+    return <Context.Provider value={value}>{children}</Context.Provider>;
+  };
+}
+
+const Data1Provider = createDataProvider(Data1Context);
+const Data2Provider = createDataProvider(Data2Context);
+const Data3Provider = createDataProvider(Data3Context);
+```
+
+### Create provider composing function and compose providers:
+
+```js
+// src / DataContexts.jsx
+
+function composeProviders(providers) {
+  return ({ children }) => {
+    return providers.reduceRight((acc, Provider) => {
+      return <Provider>{acc}</Provider>;
+    }, children);
+  };
+}
+
+export const AppProviders = composeProviders([
+  Data1Provider,
+  Data2Provider,
+  Data3Provider,
+]);
+```
+
+### Create context hook factory function and the hooks:
+
+```js
+// src / DataContexts.jsx
+
+function createContextHook(Context, providerName, hookName) {
+  return () => {
+    const context = useContext(Context);
+    if (context === undefined) {
+      throw new Error(`${hookName} must be used within ${providerName}`);
+    }
+    return context;
+  };
+}
+
+const useData1 = createContextHook(Data1Context, "Data1Provider", "useData1");
+const useData2 = createContextHook(Data2Context, "Data2Provider", "useData2");
+const useData3 = createContextHook(Data3Context, "Data3Provider", "useData3");
+```
+
+### Export all hooks together:
+
+```js
+// src / DataContexts.jsx
+
+export function useData() {
+  return {
+    data1: useData1(),
+    data2: useData2(),
+    data3: useData3(),
+  };
+}
+```
+
+### Create a component, import the hooks and use the data:
+
+```js
+// src / MyComponent.jsx
+
+import { useEffect } from "react";
+import { useData } from "./DataContexts";
+
+export default function MyComponent() {
+  const { data1, data2, data3 } = useData();
+
+  useEffect(() => {
+    data1.setData("Data-1");
+    data2.setData("Data-2");
+    data3.setData("Data-3");
+  }, []);
+
   return (
-    <Provider1>
-      <Provider2>{children}</Provider2>
-    </Provider1>
+    <>
+      <h2>My Component</h2>
+
+      <p>{data1.data}</p>
+      <p>{data2.data}</p>
+      <p>{data3.data}</p>
+    </>
   );
 }
 ```
 
-### Wrap the consumers
+### Wrap the App in composed providers:
 
 ```js
 // src / main.jsx
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -125,39 +178,13 @@ createRoot(document.getElementById("root")).render(
 );
 ```
 
-### Create consumer and access the data
-
-```js
-import { useEffect } from "react";
-import { useContext1 } from "./Context1";
-import { useContext2 } from "./Context2";
-
-export default function Consumer() {
-  const [data1, setData1] = useContext1();
-  const [data2, setData2] = useContext1();
-
-  useEffect(() => {
-    setData1("Data-1");
-    setData2("Data-2");
-  }, []);
-
-  return (
-    <>
-      <h2>Consumer</h2>
-      <p>{data1}</p>
-      <p>{data2}</p>
-    </>
-  );
-}
-```
-
-### Integrate the consumer in the app
+### Integrate the component in the app:
 
 ```js
 // src / App.jsx
 ...
-import Consumer from "./Consumer";
+import MyComponent from "./MyComponent";
 ...
-<Consumer />
+<MyComponent />
 ...
 ```
