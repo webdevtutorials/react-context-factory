@@ -1,4 +1,4 @@
-# React Context API with Multiple Providers.
+# React Context API with Multiple Providers and Factory Functions.
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=FFD62E)
@@ -11,7 +11,7 @@ A quick-start guide to scaffolding a new React-Vite project with scalable and sa
 ### To run the app:
 
 ```bash
-cd react-context-multi
+cd react-context-factory
 yarn install
 yarn dev
 ```
@@ -21,8 +21,8 @@ yarn dev
 ```bash
 cd tutorials
 
-yarn create vite react-context-multi --template react
-cd react-context-multi
+yarn create vite react-context-factory --template react
+cd react-context-factory
 ```
 
 ### Initiate version control:
@@ -38,7 +38,7 @@ git branch -m master main
 
 ```bash
 gh auth status
-gh repo create react-context-multi --public --source=. --remote=origin --push
+gh repo create react-context-factory --public --source=. --remote=origin --push
 git remote -v
 ```
 
@@ -56,7 +56,7 @@ const Data2Context = createSafeContext();
 const Data3Context = createSafeContext();
 ```
 
-### Create provider factory function and providers
+### Create provider factory function and providers:
 
 ```js
 // src / DataContexts.jsx
@@ -158,7 +158,7 @@ export default function MyComponent() {
 }
 ```
 
-### Wrap the App in composed providers:
+### Wrap the app in the composed providers:
 
 ```js
 // src / main.jsx
